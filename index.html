@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>최원석 · 모의해킹 포트폴리오</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #f7f8fa;
+    --bg-elev: #ffffff;
+    --line: #e2e6ec;
+    --text: #12151c;
+    --text-dim: #5b6472;
+    --mono: #5b6472;
+    --crit: #dc2626;
+    --high: #ea580c;
+    --med: #b45309;
+    --info: #2563eb;
+    --accent: #2563eb;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Space Grotesk',sans-serif;
+    line-height:1.6;
+  }
+  .topbar{
+    height:3px; width:100%;
+    background:linear-gradient(90deg,var(--crit),var(--high),var(--med),var(--info));
+  }
+  .grid-bg{
+    position:absolute; inset:0; z-index:-1;
+    background-image:
+      radial-gradient(circle at 18% 22%, rgba(37,99,235,0.10), transparent 42%),
+      linear-gradient(rgba(18,21,28,0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(18,21,28,0.045) 1px, transparent 1px);
+    background-size:auto, 34px 34px, 34px 34px;
+    mask-image:linear-gradient(to bottom, black, transparent 92%);
+  }
+  section:nth-of-type(even){ background:var(--bg-elev); }
+  .mono{ font-family:'JetBrains Mono',monospace; }
+  a{ color:inherit; text-decoration:none; }
+
+  /* ---------- layout shells ---------- */
+  .wrap{ max-width:920px; margin:0 auto; padding:0 24px; }
+  section{ padding:96px 0; border-bottom:1px solid var(--line); }
+  section:last-of-type{ border-bottom:none; }
+
+  /* ---------- nav ---------- */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(247,248,250,0.88);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{ display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:920px; }
+  .nav-id{ font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--text-dim); }
+  .nav-id b{ color:var(--text); }
+  .nav-links{ display:flex; gap:28px; font-size:14px; color:var(--text-dim); }
+  .nav-links a:hover{ color:var(--accent); }
+
+  /* ---------- hero ---------- */
+  .hero{ padding-top:120px; padding-bottom:100px; position:relative; border-bottom:1px solid var(--line); }
+  .term{
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px; color:var(--text-dim);
+    margin-bottom:28px;
+  }
+  .term .prompt{ color:var(--accent); }
+  .cursor{ display:inline-block; width:8px; height:15px; background:var(--accent); vertical-align:-2px; animation:blink 1.1s steps(1) infinite; }
+  @keyframes blink{ 50%{ opacity:0; } }
+  h1{
+    font-size:clamp(34px,6vw,58px);
+    font-weight:700;
+    letter-spacing:-0.02em;
+    line-height:1.12;
+    margin-bottom:22px;
+  }
+  h1 .line{
+    display:block; overflow:hidden; padding-bottom:.15em;
+  }
+  h1 .line span{
+    display:inline-block;
+    transform:translateY(115%);
+    opacity:0;
+    animation:riseIn 1s cubic-bezier(.22,1,.36,1) forwards;
+  }
+  h1 .line:nth-child(2) span{ color:var(--accent); }
+  @keyframes riseIn{ to{ transform:translateY(0); opacity:1; } }
+  .hero-sub{
+    font-size:18px; color:var(--text-dim); max-width:640px;
+    opacity:0; animation:fadeUp .8s ease forwards; animation-delay:1.5s;
+  }
+  @keyframes fadeUp{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
+  .hero-meta{ opacity:0; animation:fadeUp .8s ease forwards; animation-delay:1.75s; }
+  .hero-meta{
+    margin-top:44px; display:flex; gap:36px; flex-wrap:wrap;
+    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-dim);
+  }
+  .hero-meta div b{ display:block; font-family:'Space Grotesk',sans-serif; font-size:15px; color:var(--text); font-weight:600; margin-top:4px; }
+
+  /* ---------- section headers ---------- */
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.08em;
+    color:var(--accent); text-transform:uppercase; margin-bottom:10px;
+  }
+  h2{ font-size:28px; font-weight:600; margin-bottom:20px; letter-spacing:-0.01em; }
+  .lede{ color:var(--text-dim); max-width:640px; margin-bottom:44px; font-size:15px; }
+
+  /* ---------- timeline (log style) ---------- */
+  .log{ border-left:1px solid var(--line); padding-left:24px; }
+  .log-entry{ position:relative; padding-bottom:28px; }
+  .log-entry:last-child{ padding-bottom:0; }
+  .log-entry::before{
+    content:''; position:absolute; left:-29px; top:5px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--bg); border:2px solid var(--accent);
+  }
+  .log-time{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-dim); }
+  .log-body{ font-size:15px; margin-top:4px; }
+
+  /* ---------- skills columns ---------- */
+  .skill-grid{ display:grid; grid-template-columns:1fr 1fr; gap:32px; }
+  @media (max-width:640px){ .skill-grid{ grid-template-columns:1fr; } }
+  .skill-card{ background:var(--bg-elev); border:1px solid var(--line); border-radius:10px; padding:24px; box-shadow:0 1px 2px rgba(18,21,28,0.04); }
+  .skill-card h3{ font-size:14px; font-family:'JetBrains Mono',monospace; color:var(--text-dim); margin-bottom:14px; letter-spacing:0.04em; }
+  .skill-card ul{ list-style:none; }
+  .skill-card li{ font-size:14px; padding:6px 0; border-top:1px solid var(--line); }
+  .skill-card li:first-child{ border-top:none; }
+
+  /* ---------- roadmap (mind-map style) ---------- */
+  .roadmap{
+    display:flex; align-items:stretch; gap:0; margin-bottom:10px;
+    overflow-x:auto; padding-bottom:6px;
+  }
+  .rnode{
+    flex:1 1 0; min-width:150px;
+    background:var(--bg-elev); border:1px solid var(--line); border-radius:10px;
+    padding:16px 14px; display:flex; flex-direction:column; gap:4px;
+    transition:border-color .15s, transform .15s, box-shadow .15s;
+    box-shadow:0 1px 2px rgba(18,21,28,0.04);
+  }
+  .rnode:hover{ border-color:var(--accent); transform:translateY(-3px); box-shadow:0 8px 18px rgba(18,21,28,0.08); }
+  .rnode-step{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--accent); font-weight:600; }
+  .rnode-title{ font-size:16px; font-weight:600; }
+  .rnode-sub{ font-size:12px; color:var(--text-dim); }
+  .rline{
+    flex:0 0 28px; align-self:center;
+    height:1px; background:repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 10px);
+    position:relative;
+  }
+  .rline::after{
+    content:'›'; position:absolute; right:-2px; top:50%; transform:translateY(-50%);
+    color:var(--text-dim); font-family:'JetBrains Mono',monospace; font-size:14px;
+  }
+  .roadmap-cap{ font-size:11px; color:var(--text-dim); margin-bottom:44px; }
+  @media (max-width:700px){
+    .roadmap{ flex-direction:column; }
+    .rline{ display:none; }
+  }
+
+  /* ---------- project cards ---------- */
+  .proj{
+    display:block; background:var(--bg-elev); border:1px solid var(--line); border-radius:12px;
+    padding:26px 28px; margin-bottom:16px; transition:border-color .15s, transform .15s, box-shadow .15s;
+    box-shadow:0 1px 2px rgba(18,21,28,0.04);
+  }
+  .proj:hover{ border-color:var(--accent); transform:translateY(-2px); box-shadow:0 8px 20px rgba(18,21,28,0.08); }
+  .proj-top{ display:flex; align-items:center; gap:12px; margin-bottom:10px; flex-wrap:wrap; }
+  .badge{
+    font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600;
+    padding:3px 9px; border-radius:5px; letter-spacing:0.03em;
+  }
+  .b-crit{ background:rgba(220,38,38,0.08); color:var(--crit); border:1px solid rgba(220,38,38,0.3); }
+  .b-high{ background:rgba(234,88,12,0.08); color:var(--high); border:1px solid rgba(234,88,12,0.3); }
+  .b-med{ background:rgba(180,83,9,0.08); color:var(--med); border:1px solid rgba(180,83,9,0.3); }
+  .b-info{ background:rgba(37,99,235,0.08); color:var(--info); border:1px solid rgba(37,99,235,0.3); }
+  .proj-tag{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim); }
+  .proj h3{ font-size:19px; font-weight:600; margin-bottom:8px; }
+  .proj p{ font-size:14px; color:var(--text-dim); }
+  .proj-arrow{ float:right; font-family:'JetBrains Mono',monospace; color:var(--text-dim); font-size:13px; }
+  .proj:hover .proj-arrow{ color:var(--accent); }
+
+  /* ---------- cert table ---------- */
+  table{ width:100%; border-collapse:collapse; font-size:14px; }
+  th{ text-align:left; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.05em; padding-bottom:12px; border-bottom:1px solid var(--line); font-weight:500; }
+  td{ padding:14px 0; border-bottom:1px solid var(--line); }
+  td:last-child, th:last-child{ text-align:right; color:var(--text-dim); font-family:'JetBrains Mono',monospace; font-size:13px; }
+
+  /* ---------- footer ---------- */
+  footer{ padding:56px 0; text-align:center; }
+  footer p{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-dim); }
+</style>
+</head>
+<body>
+
+<div class="topbar"></div>
+
+<nav>
+  <div class="wrap">
+    <div class="nav-id">🛡 <b>choiwonseok</b> / portfolio.log</div>
+    <div class="nav-links">
+      <a href="#story">story</a>
+      <a href="#stack">stack</a>
+      <a href="#projects">projects</a>
+      <a href="#certs">certs</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero wrap">
+  <div class="grid-bg"></div>
+  <div class="term"><span class="prompt">$</span> whoami<span class="cursor"></span></div>
+  <h1>
+    <span class="line"><span style="animation-delay:.1s">관</span><span style="animation-delay:.16s">제</span><span style="animation-delay:.22s">&nbsp;5년,</span><span style="animation-delay:.30s">&nbsp;그리고</span></span>
+    <span class="line"><span style="animation-delay:.55s">이제는</span><span style="animation-delay:.65s">&nbsp;공격자의</span><span style="animation-delay:.78s">&nbsp;시선으로.</span></span>
+  </h1>
+  <p class="hero-sub">서버 상태를 모니터링하고, 장애가 생기면 대응하던 사람이, 같은 인프라를 이번엔 공격자 관점에서 들여다보기 시작했습니다. 최원석의 모의해킹 학습 기록입니다.</p>
+  <div class="hero-meta">
+    <div>실무<b>서버실 관제 5년</b></div>
+    <div>전환<b>모의해킹 학습 중</b></div>
+  </div>
+</header>
+
+<section id="story">
+  <div class="wrap">
+    <div class="eyebrow">Log — Timeline</div>
+    <h2>지금까지의 흐름</h2>
+    <p class="lede">서버 모니터링·장애 대응 업무를 하며 익힌 인프라 지식 위에, 모의해킹 공부를 이어온 기록입니다.</p>
+    <div class="log">
+      <div class="log-entry">
+        <div class="log-time mono">2019.03 – 2024.03</div>
+        <div class="log-body">(주)지메이트시스템즈 · 서버실 관제 OP — Zabbix 기반 서버 모니터링, 장애 원인분석·대응</div>
+      </div>
+      <div class="log-entry">
+        <div class="log-time mono">2025.12 – 2026.06</div>
+        <div class="log-body">WINS Cloud Security School 1기 수료</div>
+      </div>
+      <div class="log-entry">
+        <div class="log-time mono">2026 –</div>
+        <div class="log-body">모의해킹 학습 중</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="stack">
+  <div class="wrap">
+    <div class="eyebrow">Stack</div>
+    <h2>진단 영역 &amp; 도구</h2>
+    <p class="lede">관제에서 다루던 인프라 지식 위에, 공격자 관점의 도구와 기법을 쌓아가고 있습니다.</p>
+    <div class="skill-grid">
+      <div class="skill-card">
+        <h3>DIAGNOSIS SCOPE</h3>
+        <ul>
+          <li>웹 애플리케이션 — 주통기반 가이드, OWASP Top 10</li>
+          <li>모바일 앱 — 안드로이드 동적 분석, 메서드 후킹</li>
+          <li>시스템 / 인프라 — 리눅스 서버, CVE 재현</li>
+        </ul>
+      </div>
+      <div class="skill-card">
+        <h3>TOOLING</h3>
+        <ul>
+          <li>웹 진단 — Burp Suite, sqlmap</li>
+          <li>모바일 — Frida</li>
+          <li>실습 환경 — Kali Linux, VMware, Docker</li>
+          <li>모니터링 — Zabbix (실무 5년)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="eyebrow">Findings</div>
+    <h2>프로젝트 &amp; 학습 기록</h2>
+    <p class="lede">완성된 프로젝트 4개를 정리했습니다. 클릭하면 실제 정리한 노션 페이지로 이동합니다.</p>
+
+    <a class="proj" href="https://arkchris-study7.notion.site/3ac63446e6cb819696b0f7fe84551ce3" target="_blank" rel="noopener">
+      <span class="proj-arrow">→ open</span>
+      <div class="proj-top">
+        <span class="badge b-crit">CRITICAL</span>
+        <span class="proj-tag">개인 진단 · WEB</span>
+      </div>
+      <h3>웹 애플리케이션 모의해킹 진단</h3>
+      <p>5개 영역 26개 항목 단독 진단 — Critical 5건 포함 24건 발견, kill-chain 재구성 및 CVSS 기반 보고서 작성</p>
+    </a>
+
+    <a class="proj" href="https://arkchris-study7.notion.site/3ac63446e6cb813ebe6bca89a7e67503" target="_blank" rel="noopener">
+      <span class="proj-arrow">→ open</span>
+      <div class="proj-top">
+        <span class="badge b-high">TEAM · RED/BLUE</span>
+        <span class="proj-tag">CVE-2024-1709 / 1708</span>
+      </div>
+      <h3>ConnectWise ScreenConnect 취약점 재현</h3>
+      <p>실제 침해사고를 팀 단위 Red/Blue로 재현. 인증 우회 하나로 시작해 전체 침해 흐름을 추적했습니다.</p>
+    </a>
+
+    <a class="proj" href="https://arkchris-study7.notion.site/3ac63446e6cb811cb9ecfb5d32dd6dd6" target="_blank" rel="noopener">
+      <span class="proj-arrow">→ open</span>
+      <div class="proj-top">
+        <span class="badge b-med">개인 실습</span>
+        <span class="proj-tag">MOBILE · Frida</span>
+      </div>
+      <h3>모바일 앱 동적 분석 (Frida)</h3>
+      <p>Java 메서드 후킹 실패 원인을 인스턴스 생성 타이밍 문제로 직접 진단하고 해결했습니다.</p>
+    </a>
+
+    <a class="proj" href="https://arkchris-study7.notion.site/3ac63446e6cb81db871ef061b45b52cc" target="_blank" rel="noopener">
+      <span class="proj-arrow">→ open</span>
+      <div class="proj-top">
+        <span class="badge b-info">TRAINING</span>
+        <span class="proj-tag">Dreamhack · HackTheBox</span>
+      </div>
+      <h3>CTF Write-up 모음</h3>
+      <p>웹·바이너리·리버싱·크립토를 반복 실습한 기록. tcache poisoning, ROP chain 구성 등.</p>
+    </a>
+  </div>
+</section>
+
+<section id="certs">
+  <div class="wrap">
+    <div class="eyebrow">Verification</div>
+    <h2>자격 · 교육</h2>
+    <p class="lede">진단·학습 기록을 뒷받침하는 자격과 교육 이수 내역입니다.</p>
+    <div class="skill-grid">
+      <div class="skill-card" style="padding:0; overflow:hidden;">
+        <h3 style="padding:20px 24px 0;">자격증</h3>
+        <table style="padding:0 24px 20px;">
+          <tr><th style="padding-left:24px;">이름</th><th style="padding-right:24px;">발행처</th></tr>
+          <tr><td style="padding-left:24px;">해킹보안전문가(HSE) 3급</td><td style="padding-right:24px;">한국해킹보안협회</td></tr>
+          <tr><td style="padding-left:24px;">네트워크관리사 2급</td><td style="padding-right:24px;">한국정보통신자격협회</td></tr>
+          <tr><td style="padding-left:24px; border-bottom:none;">리눅스마스터 2급</td><td style="padding-right:24px; border-bottom:none;">한국정보통신진흥협회</td></tr>
+        </table>
+      </div>
+      <div class="skill-card" style="padding:0; overflow:hidden;">
+        <h3 style="padding:20px 24px 0;">교육</h3>
+        <table style="padding:0 24px 20px;">
+          <tr><th style="padding-left:24px;">이름</th><th style="padding-right:24px;">상태</th></tr>
+          <tr><td style="padding-left:24px; border-bottom:none;">WINS Cloud Security School 1기</td><td style="padding-right:24px; border-bottom:none;">수료</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© choiwonseok · full notes at arkchris-study7.notion.site</p>
+</footer>
+
+</body>
+</html>
